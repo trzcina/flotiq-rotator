@@ -1,14 +1,10 @@
-class FlotiqRotator {
-    constructor(elementId, readOnlyKey) {
+(function() {
 
-        let linkElement = document.getElementById(elementId);
-        if (!linkElement) {
-            throw new Error(`Element #${elementId} not found`);
-        }
+    let initRotator = function (linkElement, readOnlyKey) {
 
         let imgElement = linkElement.getElementsByTagName('img')[0];
         if (!imgElement) {
-            throw new Error(`Child element img of #${elementId} not found`);
+            throw new Error(`Child element img of #${linkElement} not found`);
         }
 
         fetch(`https://api.flotiq.com/api/v1/content/rotator/rotator-986160?hydrate=1&auth_token=${readOnlyKey}`)
@@ -24,4 +20,9 @@ class FlotiqRotator {
                 }
             });
     }
-}
+
+    document.querySelectorAll('[data-rotator-id]').forEach((element) => {
+        initRotator(element, element.getAttribute('data-rotator-key'));
+    })
+
+})();
