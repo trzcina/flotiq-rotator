@@ -1,6 +1,6 @@
 (function() {
 
-    let initRotator = function (linkElement, readOnlyKey) {
+    let initRotator = function (linkElement) {
 
         let createHtmlBanner = (src, title, link) => {
             let anchor = document.createElement("a");
@@ -9,12 +9,15 @@
             anchor.title = title;
             image.src = src;
             image.alt = title;
-            image.classList.add('img-responsive img-fluid');
+            image.classList.add('img-responsive', 'img-fluid');
             anchor.append(image);
             return anchor;
         }
 
-        fetch(`https://api.flotiq.com/api/v1/content/rotator/rotator-986160?hydrate=1&auth_token=${readOnlyKey}`)
+        const rotatorId = linkElement.getAttribute('data-rotator-id');
+        const readOnlyKey = linkElement.getAttribute('data-rotator-key');
+
+        fetch(`https://api.flotiq.com/api/v1/content/rotator/${rotatorId}?hydrate=1&auth_token=${readOnlyKey}`)
             .then(response => response.json())
             .then(rotator => {
                 let enabledBanners = rotator.Banners.filter((banner) => banner.enabled === true);
@@ -30,7 +33,7 @@
     }
 
     document.querySelectorAll('[data-rotator-id]').forEach((element) => {
-        initRotator(element, element.getAttribute('data-rotator-key'));
+        initRotator(element);
     })
 
 })();
